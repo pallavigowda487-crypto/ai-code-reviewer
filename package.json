@@ -1,0 +1,19 @@
+{
+  "name": "automated-code-reviewer",
+  "version": "1.0.0",
+  "description": "Automated Code Reviewer using AI",
+  "main": "server/api/index.js",
+  "scripts": {
+    "start": "node server/api/index.js",
+    "dev:server": "nodemon server/api/index.js",
+    "dev:client": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build:client": "npm run build --prefix client",
+    "install:all": "npm install && npm install --prefix client && npm install --prefix server",
+    "build": "npm run build:client"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.3"
+  }
+}
