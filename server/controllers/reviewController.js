@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const ReviewHistory = require('../models/ReviewHistory');
 const Analytics = require('../models/Analytics');
 const { getAIProvider } = require('../services/ai/aiProvider');
+const connectDB = require('../config/db');
 
 const FALLBACK_PATTERN = /Grok API unavailable|Fallback review for/i;
 
@@ -44,6 +45,7 @@ const createReview = async (req, res) => {
     const aiResponse = await reviewFunction(code, language);
 
     // Save to History
+    await connectDB();
     const isDbConnected = mongoose.connection.readyState === 1;
     let reviewRecord = null;
     let analytics = null;
@@ -113,6 +115,7 @@ const createReview = async (req, res) => {
 
 const getReviews = async (req, res) => {
   try {
+    await connectDB();
     if (mongoose.connection.readyState !== 1) {
       console.warn('DB not connected. Returning empty review history.');
       return res.status(200).json({ success: true, reviews: [] });
@@ -128,6 +131,7 @@ const getReviews = async (req, res) => {
 
 const getAnalytics = async (req, res) => {
   try {
+    await connectDB();
     if (mongoose.connection.readyState !== 1) {
       console.warn('DB not connected. Returning default analytics.');
       return res.status(200).json({
@@ -149,6 +153,7 @@ const getAnalytics = async (req, res) => {
 
 const deleteReview = async (req, res) => {
   try {
+    await connectDB();
     if (mongoose.connection.readyState !== 1) {
       console.warn('DB not connected. Cannot delete review.');
       return res.status(200).json({ success: true, message: 'Database unavailable; delete request ignored.' });
